@@ -1,0 +1,11 @@
+faq_id,product_id,question,answer
+FAQ-001,all,What should I look for in a laptop for Python?,"For Python programming, prioritize at least 16 GB RAM when possible, an SSD, and a recent multi-core processor. These sample products are illustrative and do not guarantee performance for every workload."
+FAQ-002,all,How much RAM is useful for machine learning basics?,"16 GB RAM is a practical starting point for learning and small datasets. Larger models and datasets may need more memory or cloud compute."
+FAQ-003,all,Can these laptops handle online classes?,"All catalog laptops support ordinary online classes and video meetings. Check the product listing for its battery, camera, and connectivity details before purchase."
+FAQ-004,LT-100,How long does the ZenBook Lite 14 battery last?,"The catalog lists up to 17 hours of battery life for the ZenBook Lite 14. Actual runtime varies with workload, brightness, and settings."
+FAQ-005,LT-100,What memory and storage does the ZenBook Lite 14 have?,"The ZenBook Lite 14 has 16 GB RAM and a 512 GB SSD according to the sample catalog."
+FAQ-006,LT-101,What processor is in the Aspire 7?,"The Aspire 7 uses an AMD Ryzen 7 processor and has 16 GB RAM with a 1 TB SSD in this sample catalog."
+FAQ-007,LT-101,How long does the Aspire 7 battery last?,"The sample listing estimates up to 8 hours. Real battery life depends on how the laptop is used."
+FAQ-008,all,What warranty is included?,"Warranty length is shown for each product in the catalog. Confirm warranty coverage and regional terms with the seller before a real purchase."
+FAQ-009,all,Are these live prices and inventory?,"No. This training catalog contains illustrative sample prices and stock counts, not live market listings or live inventory."
+FAQ-010,LT-102,Is the IdeaPad Slim 3 currently available?,"The sample catalog currently lists the IdeaPad Slim 3 as out of stock. Availability should be rechecked with a real retailer."
