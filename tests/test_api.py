@@ -13,11 +13,13 @@ class ShoppingAssistantApiTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.client.close()
 
-    def test_root_redirects_to_api_docs(self) -> None:
-        response = self.client.get("/", follow_redirects=False)
+    def test_root_serves_shopping_page(self) -> None:
+        response = self.client.get("/")
 
-        self.assertEqual(response.status_code, 307)
-        self.assertEqual(response.headers["location"], "/docs")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("text/html", response.headers["content-type"])
+        self.assertIn("Find your next laptop", response.text)
+        self.assertIn("/recommendations", response.text)
 
     def test_recommendations_check_budget_stock_and_requirements(self) -> None:
         response = self.client.post(

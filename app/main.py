@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from app.catalog import get_product, load_products, search_catalog
@@ -48,8 +49,9 @@ app = FastAPI(
 
 
 @app.get("/", include_in_schema=False)
-def root() -> RedirectResponse:
-    return RedirectResponse(url="/docs")
+def root() -> FileResponse:
+    page = Path(__file__).parent / "static" / "index.html"
+    return FileResponse(page, media_type="text/html")
 
 
 @app.get("/health")

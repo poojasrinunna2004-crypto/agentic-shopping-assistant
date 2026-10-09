@@ -7,6 +7,8 @@ A FastAPI training project for an agentic e-commerce shopping workflow. The samp
 - Natural-language shopping requirements, with budget and RAM extracted from the request.
 - LangGraph workflow with separate requirement, search, comparison, inventory, budget, and recommendation agents.
 - LangChain tools backed by a CSV product catalog.
+- Customer-facing browser page for readable recommendations, catalog search, FAQs, and the simulated cart.
+- Swagger API documentation remains available at `/docs` for endpoint testing.
 - Optional OpenAI structured extraction for natural-language requirements, with deterministic parsing as a no-key fallback.
 - Ranked product comparisons with discounted price, stock, delivery estimate, and recommendation explanations.
 - FAQ retrieval using TF-IDF over the FAQ CSV. When an OpenAI key is configured, ChatOpenAI generates a concise answer grounded in retrieved FAQ entries; otherwise matching FAQ answers are returned directly.
@@ -25,14 +27,14 @@ Copy-Item .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Open `http://127.0.0.1:8000/docs` for the interactive API. To enable OpenAI-backed FAQ answer generation, set `OPENAI_API_KEY` in `.env`. The rest of the application works without it.
+Open `http://127.0.0.1:8000/` for the shopping page or `http://127.0.0.1:8000/docs` for interactive API testing. To enable OpenAI-backed FAQ answer generation, set `OPENAI_API_KEY` in `.env`. The rest of the application works without it.
 
 ## Deploy on Render
 
 1. Push this project to a GitHub repository. Confirm `.env` is not committed; it is excluded by `.gitignore`.
 2. In Render, choose **New > Blueprint**, connect the GitHub repository, and apply the settings from `render.yaml`.
 3. Wait for the build and deploy to finish. Render will provide a public service URL.
-4. Open `<your-service-url>/health`; expect `{"status":"ok"}`. Then open `<your-service-url>/docs` to try the API.
+4. Open `<your-service-url>/health`; expect `{"status":"ok"}`. Visit the service root for the shopping page or `<your-service-url>/docs` to try the API directly.
 5. To enable OpenAI calls, add `OPENAI_API_KEY` under the service's environment variables in Render, then redeploy. Do not put the key in `render.yaml` or commit it to GitHub.
 
 This deployment is for demos and training: the catalog is sample data, and the simulated cart is shared in process memory and resets when the service restarts. Do not use it for real orders or private customer data.

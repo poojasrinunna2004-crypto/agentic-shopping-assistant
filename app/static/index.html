@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#eef3ef">
+    <title>Agentic Shopping Assistant</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --page: #eef3ef;
+            --surface: #fbfcfa;
+            --ink: #172d2b;
+            --muted: #5c706c;
+            --line: #d6e0da;
+            --green: #146b5d;
+            --green-dark: #0c5148;
+            --blue: #355e86;
+            --orange: #b75e35;
+            --soft-green: #e5f2ec;
+            --soft-blue: #e8eef5;
+            --soft-orange: #faeee5;
+            --danger: #a23b35;
+            --serif: Georgia, "Times New Roman", serif;
+            --sans: "Trebuchet MS", "Segoe UI", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--ink);
+            font-family: var(--sans);
+            line-height: 1.5;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            min-height: 68px;
+            padding: 12px max(24px, calc((100vw - 1180px) / 2));
+            border-bottom: 1px solid var(--line);
+            background: var(--surface);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 9px;
+            background: var(--green);
+            color: white;
+            font-family: var(--serif);
+            font-size: 20px;
+        }
+
+        .top-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .top-links a {
+            color: var(--muted);
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .top-links a:hover {
+            color: var(--green-dark);
+        }
+
+        main {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .intro {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 28px;
+            padding: 40px 0 28px;
+        }
+
+        .eyebrow {
+            margin: 0 0 6px;
+            color: var(--green);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            max-width: 680px;
+            margin-bottom: 8px;
+            font: 40px/1.1 var(--serif);
+        }
+
+        .intro-copy {
+            max-width: 650px;
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .sample-note {
+            flex: 0 0 auto;
+            padding: 9px 12px;
+            border: 1px solid #e4c8af;
+            border-radius: 6px;
+            background: var(--soft-orange);
+            color: #704128;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(270px, 0.78fr) minmax(0, 1.8fr);
+            align-items: start;
+            gap: 32px;
+            padding-bottom: 48px;
+        }
+
+        .request-panel {
+            position: sticky;
+            top: 18px;
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-top: 4px solid var(--green);
+            border-radius: 8px;
+            background: var(--surface);
+        }
+
+        h2 {
+            margin-bottom: 14px;
+            font: 23px/1.2 var(--serif);
+        }
+
+        h3 {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        textarea,
+        input,
+        select {
+            width: 100%;
+            border: 1px solid #bdcdc5;
+            border-radius: 5px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        textarea {
+            min-height: 140px;
+            padding: 11px;
+            resize: vertical;
+        }
+
+        input,
+        select {
+            min-height: 40px;
+            padding: 8px 10px;
+        }
+
+        textarea:focus,
+        input:focus,
+        select:focus {
+            outline: 3px solid #b9ddd1;
+            border-color: var(--green);
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .field-row label {
+            margin-top: 14px;
+        }
+
+        .primary,
+        .secondary,
+        .quiet-button {
+            min-height: 40px;
+            border: 0;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .primary {
+            width: 100%;
+            margin-top: 16px;
+            padding: 9px 13px;
+            background: var(--green);
+            color: #fff;
+        }
+
+        .primary:hover {
+            background: var(--green-dark);
+        }
+
+        .primary:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
+
+        .secondary {
+            padding: 8px 12px;
+            background: var(--soft-blue);
+            color: var(--blue);
+        }
+
+        .secondary:hover {
+            background: #d9e4f0;
+        }
+
+        .quiet-button {
+            padding: 7px 10px;
+            background: transparent;
+            color: var(--muted);
+        }
+
+        .quiet-button:hover {
+            background: #edf2ef;
+            color: var(--ink);
+        }
+
+        .content {
+            min-width: 0;
+        }
+
+        .section {
+            padding: 2px 0 28px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 26px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+        }
+
+        .section-heading p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .empty-state,
+        .notice {
+            padding: 14px 16px;
+            border-left: 3px solid var(--blue);
+            background: var(--soft-blue);
+            color: #36536d;
+            font-size: 13px;
+        }
+
+        .notice.error {
+            border-color: var(--danger);
+            background: #f8eae8;
+            color: var(--danger);
+        }
+
+        .recommendations {
+            display: grid;
+            gap: 10px;
+        }
+
+        .recommendation {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 14px;
+            padding: 15px 16px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: var(--surface);
+        }
+
+        .recommendation:first-child {
+            border-left: 4px solid var(--green);
+        }
+
+        .recommendation p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .price {
+            white-space: nowrap;
+            color: var(--green-dark);
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .price-caption {
+            color: var(--muted);
+            font-size: 10px;
+            text-align: right;
+        }
+
+        .facts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 9px;
+        }
+
+        .fact {
+            padding: 3px 7px;
+            border-radius: 4px;
+            background: var(--soft-green);
+            color: #285a4b;
+            font-size: 10px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--surface);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        th {
+            padding: 10px 11px;
+            background: #e6ede8;
+            color: #405650;
+            font-size: 10px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px;
+            border-top: 1px solid #e3eae5;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f2f7f3;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 3px 7px;
+            border-radius: 12px;
+            background: var(--soft-green);
+            color: #285a4b;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .status.out {
+            background: var(--soft-orange);
+            color: #80452c;
+        }
+
+        .small-action {
+            padding: 6px 9px;
+            border: 1px solid #a8c6b9;
+            border-radius: 4px;
+            background: white;
+            color: var(--green-dark);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .small-action:hover {
+            background: var(--soft-green);
+        }
+
+        .small-action:disabled {
+            cursor: not-allowed;
+            color: #888;
+            border-color: #ddd;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: minmax(140px, 1fr) 140px auto;
+            align-items: end;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .filter-row label {
+            margin: 0 0 5px;
+        }
+
+        .filter-row button {
+            min-height: 40px;
+        }
+
+        .faq-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 170px auto;
+            align-items: end;
+            gap: 10px;
+        }
+
+        .faq-form label {
+            margin: 0 0 5px;
+        }
+
+        .faq-form .secondary {
+            min-height: 40px;
+        }
+
+        .faq-answer {
+            margin-top: 12px;
+            padding: 13px 15px;
+            border-left: 3px solid var(--orange);
+            background: var(--soft-orange);
+            font-size: 13px;
+        }
+
+        .faq-answer p {
+            margin: 0 0 7px;
+        }
+
+        .faq-source {
+            color: #704128;
+            font-size: 10px;
+        }
+
+        .cart-line {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 16px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0 0;
+            font-weight: 800;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        footer {
+            padding: 20px 0 34px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #86bdb0;
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 800px) {
+            .intro {
+                align-items: start;
+                flex-direction: column;
+                padding-top: 30px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .workspace {
+                grid-template-columns: 1fr;
+                gap: 26px;
+            }
+
+            .request-panel {
+                position: static;
+            }
+
+            .top-links {
+                gap: 11px;
+            }
+
+            .top-links a {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            main {
+                width: min(100% - 28px, 1180px);
+            }
+
+            .topbar {
+                padding: 10px 14px;
+            }
+
+            .brand {
+                font-size: 12px;
+            }
+
+            .brand-mark {
+                width: 30px;
+                height: 30px;
+            }
+
+            .top-links {
+                gap: 9px;
+            }
+
+            .top-links a {
+                font-size: 10px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .recommendation {
+                grid-template-columns: 1fr;
+            }
+
+            .price-block {
+                display: flex;
+                align-items: baseline;
+                gap: 7px;
+            }
+
+            .price-caption {
+                text-align: left;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-row button {
+                grid-column: 1 / -1;
+            }
+
+            .faq-form {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-form .secondary {
+                width: 100%;
+            }
+
+            .section-heading {
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="/" aria-label="Agentic Shopping Assistant home" style="text-decoration:none">
+            <span class="brand-mark" aria-hidden="true">A</span>
+            <span>AGENTIC SHOPPING ASSISTANT</span>
+        </a>
+        <nav class="top-links" aria-label="Page sections">
+            <a href="#recommend">Find</a>
+            <a href="#catalog">Catalog</a>
+            <a href="#faq">FAQ</a>
+            <a href="#cart">Cart <span id="cart-count">0</span></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="intro">
+            <div>
+                <p class="eyebrow">Laptop desk / Sample catalog</p>
+                <h1>Find your next laptop</h1>
+                <p class="intro-copy">Tell us what you need. Compare suitable options, check availability, and choose
+                    what goes in your cart.</p>
+            </div>
+            <div class="sample-note">Sample prices and stock · INR</div>
+        </section>
+
+        <div class="workspace">
+            <aside class="request-panel" id="recommend">
+                <p class="eyebrow">Your requirements</p>
+                <h2>What are you looking for?</h2>
+                <form id="recommend-form">
+                    <label for="requirements">Describe your needs</label>
+                    <textarea id="requirements" required
+                        minlength="3">I need a laptop under 60,000 for Python programming, machine learning basics, and online classes. I prefer 16 GB RAM and good battery life.</textarea>
+                    <div class="field-row">
+                        <div>
+                            <label for="budget">Budget (INR)</label>
+                            <input id="budget" type="number" min="1" value="60000" placeholder="60000">
+                        </div>
+                        <div>
+                            <label for="ram">Minimum RAM (GB)</label>
+                            <input id="ram" type="number" min="1" value="16" placeholder="16">
+                        </div>
+                    </div>
+                    <button class="primary" id="recommend-button" type="submit">Show recommendations</button>
+                </form>
+            </aside>
+
+            <div class="content">
+                <section class="section" aria-labelledby="results-title">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">Matched to your request</p>
+                            <h2 id="results-title">Recommendations</h2>
+                        </div>
+                        <a href="/docs" class="muted" style="font-size:12px">API docs</a>
+                    </div>
+                    <div id="recommendation-message" class="empty-state" role="status">Your matches will appear here.
+                    </div>
+                    <div id="recommendations" class="recommendations"></div>
+                    <div id="comparison-area" hidden style="margin-top:18px">
+                        <h3>Compare all matches</h3>
+                        <div id="comparison-table" class="table-wrap"></div>
+                    </div>
+                </section>
+
+                <section class="section" id="catalog" aria-labelledby="catalog-title">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">Browse available products</p>
+                            <h2 id="catalog-title">Sample catalog</h2>
+                        </div>
+                        <span id="catalog-count" class="muted" style="font-size:12px"></span>
+                    </div>
+                    <form id="catalog-form" class="filter-row">
+                        <div>
+                            <label for="catalog-query">Search</label>
+                            <input id="catalog-query" type="search" placeholder="Python, ASUS, Ryzen...">
+                        </div>
+                        <div>
+                            <label for="catalog-budget">Maximum price</label>
+                            <input id="catalog-budget" type="number" min="1" placeholder="Any price">
+                        </div>
+                        <button class="secondary" type="submit">Search products</button>
+                    </form>
+                    <div id="catalog-table" class="table-wrap"></div>
+                </section>
+
+                <section class="section" id="faq" aria-labelledby="faq-title">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">Product information</p>
+                            <h2 id="faq-title">Ask a product question</h2>
+                        </div>
+                    </div>
+                    <form id="faq-form" class="faq-form">
+                        <div>
+                            <label for="faq-question">Question</label>
+                            <input id="faq-question" required minlength="3"
+                                value="How long does the ZenBook Lite 14 battery last?">
+                        </div>
+                        <div>
+                            <label for="faq-product">Product</label>
+                            <select id="faq-product">
+                                <option value="">All products</option>
+                            </select>
+                        </div>
+                        <button class="secondary" type="submit">Ask FAQ</button>
+                    </form>
+                    <div id="faq-result" aria-live="polite"></div>
+                </section>
+
+                <section class="section" id="cart" aria-labelledby="cart-title">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">Customer-confirmed items</p>
+                            <h2 id="cart-title">Simulated cart</h2>
+                        </div>
+                        <button id="clear-cart" class="quiet-button" type="button">Clear cart</button>
+                    </div>
+                    <div id="cart-items" class="empty-state">Your cart is empty.</div>
+                    <div id="cart-total" class="cart-total" hidden></div>
+                </section>
+            </div>
+        </div>
+
+        <footer>Training catalog only. Prices and stock are illustrative, not live retailer data.</footer>
+    </main>
+
+    <script>
+        const money = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
+        const byId = (id) => document.getElementById(id);
+        let currentCatalog = [];
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[character]);
+        }
+
+        async function request(path, options = {}) {
+            const response = await fetch(path, {
+                ...options,
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
+            });
+            const body = await response.json();
+            if (!response.ok) throw new Error(body.detail || `Request failed (${response.status})`);
+            return body;
+        }
+
+        function showMessage(target, message, isError = false) {
+            target.hidden = false;
+            target.className = isError ? 'notice error' : 'empty-state';
+            target.textContent = message;
+        }
+
+        function productTable(products, includeStatus = false) {
+            if (!products.length) return '<div class="empty-state">No products match those filters.</div>';
+            const rows = products.map((product) => {
+                const inStock = product.stock > 0;
+                const status = includeStatus
+                    ? `<span class="status ${inStock ? '' : 'out'}">${inStock ? 'In stock' : 'Out of stock'}</span>`
+                    : `${product.stock} available`;
+                const action = includeStatus
+                    ? `<button class="small-action" type="button" data-add="${escapeHtml(product.product_id)}" ${inStock ? '' : 'disabled'}>${inStock ? 'Add' : 'Unavailable'}</button>`
+                    : `<span class="status">Within budget</span>`;
+                return `<tr>
+          <td><strong>${escapeHtml(product.name)}</strong><br><span class="muted">${escapeHtml(product.brand)}</span></td>
+          <td>${money.format(product.effective_price)}</td>
+          <td>${product.ram_gb} GB</td>
+          <td>${escapeHtml(product.processor)}</td>
+          <td>${escapeHtml(product.storage)}</td>
+          <td>${product.battery_hours}h</td>
+          <td>${status}</td>
+          <td>${action}</td>
+        </tr>`;
+            }).join('');
+            return `<table><thead><tr><th>Product</th><th>Price</th><th>RAM</th><th>Processor</th><th>Storage</th><th>Battery</th><th>Stock</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+        }
+
+        function comparisonTable(products) {
+            if (!products.length) return '<div class="empty-state">No products matched this request.</div>';
+            const rows = products.map((product) => {
+                const inStock = product.inventory_status === 'in stock';
+                const withinBudget = product.budget_status === 'within budget';
+                return `<tr>
+                    <td><strong>${escapeHtml(product.name)}</strong></td>
+                    <td>${money.format(product.effective_price)}</td>
+                    <td>${product.ram_gb} GB</td>
+                    <td>${escapeHtml(product.processor)}</td>
+                    <td>${product.battery_hours}h</td>
+                    <td><span class="status ${inStock ? '' : 'out'}">${escapeHtml(product.inventory_status)}</span></td>
+                    <td><span class="status ${withinBudget ? '' : 'out'}">${escapeHtml(product.budget_status)}</span></td>
+                </tr>`;
+            }).join('');
+            return `<table><thead><tr><th>Product</th><th>Price</th><th>RAM</th><th>Processor</th><th>Battery</th><th>Inventory</th><th>Budget</th></tr></thead><tbody>${rows}</tbody></table>`;
+        }
+
+        async function loadCatalog(event) {
+            if (event) event.preventDefault();
+            const params = new URLSearchParams();
+            const query = byId('catalog-query').value.trim();
+            const maxPrice = byId('catalog-budget').value;
+            if (query) params.set('q', query);
+            if (maxPrice) params.set('max_price', maxPrice);
+            try {
+                const result = await request(`/products?${params.toString()}`);
+                currentCatalog = result.products;
+                byId('catalog-count').textContent = `${result.count} products`;
+                byId('catalog-table').innerHTML = productTable(result.products, true);
+                result.products.forEach((product) => {
+                    if (!byId('faq-product').querySelector(`option[value="${CSS.escape(product.product_id)}"]`)) {
+                        const option = document.createElement('option');
+                        option.value = product.product_id;
+                        option.textContent = product.name;
+                        byId('faq-product').append(option);
+                    }
+                });
+            } catch (error) {
+                byId('catalog-table').innerHTML = `<div class="notice error">${escapeHtml(error.message)}</div>`;
+            }
+        }
+
+        function recommendationCards(items) {
+            return items.map((item, index) => `<article class="recommendation">
+        <div>
+          <p class="eyebrow">${index === 0 ? 'Best match' : 'Alternative'} · ${escapeHtml(item.brand)}</p>
+          <h3>${escapeHtml(item.name)}</h3>
+          <div class="facts">
+            <span class="fact">${item.ram_gb} GB RAM</span>
+            <span class="fact">${escapeHtml(item.processor)}</span>
+            <span class="fact">${escapeHtml(item.storage)}</span>
+            <span class="fact">${item.battery_hours}h listed battery</span>
+            <span class="fact">${item.delivery_days} day delivery</span>
+          </div>
+          <p>${escapeHtml(item.explanation)}</p>
+        </div>
+        <div class="price-block">
+          <div class="price">${money.format(item.effective_price)}</div>
+          <div class="price-caption">${escapeHtml(item.inventory_status)} · ${escapeHtml(item.budget_status)}</div>
+        </div>
+      </article>`).join('');
+        }
+
+        byId('recommend-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const button = byId('recommend-button');
+            button.disabled = true;
+            button.textContent = 'Finding matches...';
+            byId('recommendations').innerHTML = '';
+            byId('comparison-area').hidden = true;
+            try {
+                const budget = byId('budget').value;
+                const ram = byId('ram').value;
+                const result = await request('/recommendations', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        requirements: byId('requirements').value,
+                        budget: budget ? Number(budget) : null,
+                        preferred_ram_gb: ram ? Number(ram) : null
+                    })
+                });
+                showMessage(byId('recommendation-message'), result.message);
+                if (result.recommendations.length) {
+                    byId('recommendations').innerHTML = recommendationCards(result.recommendations);
+                }
+                if (result.comparison.length) {
+                    byId('comparison-table').innerHTML = comparisonTable(result.comparison);
+                    byId('comparison-area').hidden = false;
+                }
+            } catch (error) {
+                showMessage(byId('recommendation-message'), error.message, true);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Show recommendations';
+            }
+        });
+
+        byId('catalog-form').addEventListener('submit', loadCatalog);
+
+        byId('faq-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            byId('faq-result').innerHTML = '';
+            try {
+                const productId = byId('faq-product').value;
+                const result = await request('/faqs', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        question: byId('faq-question').value,
+                        product_id: productId || null
+                    })
+                });
+                const sources = result.sources.map((source) => `${escapeHtml(source.faq_id)} · ${escapeHtml(source.question)}`).join('<br>');
+                byId('faq-result').innerHTML = `<div class="faq-answer"><p>${escapeHtml(result.answer)}</p><div class="faq-source">Source${result.sources.length === 1 ? '' : 's'}: ${sources || 'No matching FAQ entry'}</div></div>`;
+            } catch (error) {
+                byId('faq-result').innerHTML = `<div class="notice error">${escapeHtml(error.message)}</div>`;
+            }
+        });
+
+        async function loadCart() {
+            try {
+                const cart = await request('/cart');
+                byId('cart-count').textContent = cart.items.reduce((count, item) => count + item.quantity, 0);
+                if (!cart.items.length) {
+                    byId('cart-items').hidden = false;
+                    byId('cart-items').className = 'empty-state';
+                    byId('cart-items').textContent = 'Your cart is empty.';
+                    byId('cart-total').hidden = true;
+                    return;
+                }
+                byId('cart-items').className = '';
+                byId('cart-items').innerHTML = cart.items.map((item) => `<div class="cart-line">
+          <span><strong>${escapeHtml(item.name)}</strong><br><span class="muted">${item.quantity} × ${money.format(item.unit_price)}</span></span>
+                    <strong>${money.format(item.line_total)}</strong>
+        </div>`).join('');
+                byId('cart-total').hidden = false;
+                byId('cart-total').innerHTML = `<span>Total</span><span>${money.format(cart.total)}</span>`;
+            } catch (error) {
+                byId('cart-items').textContent = error.message;
+            }
+        }
+
+        byId('catalog-table').addEventListener('click', async (event) => {
+            const button = event.target.closest('[data-add]');
+            if (!button) return;
+            const productId = button.dataset.add;
+            const selected = currentCatalog.find((item) => item.product_id === productId);
+            if (!selected) return;
+            const confirmed = window.confirm(`Add ${selected.name} for ${money.format(selected.effective_price)} to your simulated cart?`);
+            if (!confirmed) return;
+            try {
+                await request('/cart/confirm', {
+                    method: 'POST',
+                    body: JSON.stringify({ product_id: productId, quantity: 1, confirmed: true })
+                });
+                await loadCart();
+            } catch (error) {
+                window.alert(error.message);
+            }
+        });
+
+        byId('clear-cart').addEventListener('click', async () => {
+            if (!window.confirm('Clear the simulated cart?')) return;
+            try {
+                await request('/cart', { method: 'DELETE' });
+                await loadCart();
+            } catch (error) {
+                window.alert(error.message);
+            }
+        });
+
+        loadCatalog();
+        loadCart();
+    </script>
+</body>
+
+</html>
